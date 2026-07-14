@@ -5,15 +5,15 @@
 
 
 body {
-	min-height: 90vh;
+	min-height: 100vh;
 	display: flex;
 	flex-direction: column;
 	align-items: center;
-	justify-content: center;
 	background: #132b3d;
 	font-family: Verdana;
 	color: #f4d03f;
-	
+	padding: 20px;
+	gap: 20px;
 }
 
 
@@ -29,9 +29,12 @@ body {
 }
 
 .topo {
-	position: absolute;
-	top: 50px;
-	left: 50px;
+	display: flex;
+	justify-content: space-between;
+	width: 100%;
+	max-width: 95vw;
+	padding: 0 16px;
+	gap: 16px;
 }
 
 ul {
@@ -81,11 +84,13 @@ button:hover , .button:hover {
 	gap: 16px;
 }
 
-.movimentacoes{
+.informacoes {
 	display: flex;
-	justify-content: space-between;
-	padding: 16px;
-	width: 95vw;
+	justify-content: space-around;
+	width: 100%;
+	max-width: 95vw;
+	padding: 0 16px;
+	gap: 16px;
 }
 
 .instrucoes {
@@ -104,8 +109,10 @@ button:hover , .button:hover {
 	display: flex;
 	justify-content: space-evenly;
 	align-items: center;
-	width: 95vw;
+	width: 100%;
+	max-width: 95vw;
 	height: 60vh;
+	padding: 0 16px;
 }
 
 .torre-decoracao {

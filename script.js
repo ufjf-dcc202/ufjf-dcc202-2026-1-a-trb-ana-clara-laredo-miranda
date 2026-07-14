@@ -1,3 +1,4 @@
+// DEFS
 const torres = [
     [
         { tamanho: 8, cor: "#e74c3c" },
@@ -13,21 +14,51 @@ const torres = [
     []
 ];
 
-const elementosTorres = document.querySelectorAll(".torre");
-const contadorMovimentos = document.querySelector("#contador");
-const minimoMovimentos = document.querySelector("#minimo");
+const historico = [];
+const Torres = document.querySelectorAll(".torre");
+const contador = document.querySelector("#contador");
+const minimo = document.querySelector("#minimo");
+minimo.textContent = calcularMovimentosMinimos(torres[0].length);
 const mensagem = document.querySelector("#mensagem");
 let origem = null;
 let movimentos = 0;
 
+
+// FUNÇÕES
+
+function reiniciarJogo() {
+    torres[0] = [
+        { tamanho: 8, cor: "#e74c3c" },
+        { tamanho: 7, cor: "#f39c12" },
+        { tamanho: 6, cor: "#f1c40f" },
+        { tamanho: 5, cor: "#2ecc71" },
+        { tamanho: 4, cor: "#1abc9c" },
+        { tamanho: 3, cor: "#3498db" },
+        { tamanho: 2, cor: "#9b59b6" },
+        { tamanho: 1, cor: "#ec407a" }
+    ];
+    torres[1] = [];
+    torres[2] = [];
+
+    movimentos = 0;
+    origem = null;
+    historico.length = 0;
+
+    atualizarContador();
+    desenharTorres();
+}
+
+function calcularMovimentosMinimos(numDiscos) {
+    return Math.pow(2, numDiscos) - 1;
+}
 
 function calcularLarguraDisco(tamanho) {
     return 50 + (tamanho * 12);
 }
 
 function limparSelecao() {
-    for (let i = 0; i < elementosTorres.length; i++) {
-        elementosTorres[i].classList.remove("selecionada");
+    for (let i = 0; i < Torres.length; i++) {
+        Torres[i].classList.remove("selecionada");
     }
 }
 
@@ -35,12 +66,12 @@ function desenharTorres() {
     limparSelecao();
 
     if (origem !== null) {
-        elementosTorres[origem].classList.add("selecionada");
+        Torres[origem].classList.add("selecionada");
     }
 
-    for (let i = 0; i < elementosTorres.length; i++) {
-        const elementoTorre = elementosTorres[i];
-        const discosAtuais = elementoTorre.querySelectorAll(".disco");
+    for (let i = 0; i < Torres.length; i++) {
+        const torreAtual = Torres[i];
+        const discosAtuais = torreAtual.querySelectorAll(".disco");
 
         for (let j = 0; j < discosAtuais.length; j++) {
             discosAtuais[j].remove();
@@ -57,71 +88,131 @@ function desenharTorres() {
             disco.style.width = calcularLarguraDisco(discoInfo.tamanho) + "px";
             disco.style.backgroundColor = discoInfo.cor;
 
-            elementoTorre.appendChild(disco);
+            torreAtual.appendChild(disco);
         }
     }
 }
 
 function atualizarContador() {
-    contadorMovimentos.textContent = movimentos;
+    contador.textContent = movimentos;
 }
 
-function moverTorre(indiceDestino) {
-    const torreOrigem = torres[origem];
+function movimentoValido(indiceOrigem, indiceDestino) {
+    const torreOrigem = torres[indiceOrigem];
     const torreDestino = torres[indiceDestino];
 
-    if (torreOrigem.length === 0) {
-        mensagem.textContent = "Movimento inválido!";
-        origem = null;
-        desenharTorres();
-        return;
-    }
 
-    const discoMovendo = torreOrigem[torreOrigem.length - 1];
-    const discoTopoDestino = torreDestino[torreDestino.length - 1];
+    const discoOrigem = torreOrigem[torreOrigem.length - 1];
+    const discoDestino = torreDestino[torreDestino.length - 1];
 
-    if (torreDestino.length === 0 || discoMovendo.tamanho < discoTopoDestino.tamanho) {
-        torreOrigem.pop();
-        torreDestino.push(discoMovendo);
-        movimentos++;
-        atualizarContador();
-        mensagem.textContent = "Movimento realizado!";
-    } else {
-        mensagem.textContent = "Movimento inválido!";
-    }
-
-    origem = null;
-    desenharTorres();
+    return torreDestino.length === 0 || discoOrigem.tamanho < discoDestino.tamanho;
 }
 
-function selecionarTorre(indiceTorre) {
+function executarMovimento(indiceOrigem, indiceDestino, registrarHistorico = true) {
+    const torreOrigem = torres[indiceOrigem];
+    const torreDestino = torres[indiceDestino];
+
+    torreDestino.push(torreOrigem.pop());
+    movimentos++;
+    atualizarContador();
+
+    if (registrarHistorico) {
+        historico.push({ origem: indiceOrigem, destino: indiceDestino });
+    }
+}
+
+function moverDisco(indiceOrigem, indiceDestino, registrarHistorico = true) {
+    if (!movimentoValido(indiceOrigem, indiceDestino)) {
+        mensagem.textContent = "Movimento inválido!";
+        return false;
+    }
+
+    executarMovimento(indiceOrigem, indiceDestino, registrarHistorico);
+    mensagem.textContent = "Movimento realizado!";
+    return true;
+}
+
+function clicarTorre(indiceTorre) {
     if (origem === null) {
         if (torres[indiceTorre].length === 0) {
             mensagem.textContent = "Escolha uma torre com disco!";
             return;
         }
-
         origem = indiceTorre;
         mensagem.textContent = "Escolha a torre de destino!";
         desenharTorres();
         return;
     }
 
-    if (origem === indiceTorre) {
+    if (indiceTorre === origem) {
         origem = null;
         mensagem.textContent = "Seleção cancelada!";
         desenharTorres();
         return;
     }
 
-    moverTorre(indiceTorre);
+    moverDisco(origem, indiceTorre);
+    origem = null;
+    desenharTorres();
+    verificarVitoria();
 }
 
-for (let i = 0; i < elementosTorres.length; i++) {
-    elementosTorres[i].addEventListener("click", function () {
-        selecionarTorre(i);
+function verificarVitoria() {
+    if (Torres[2].length === 8) {
+        mensagem.textContent = "Parabéns! Você venceu!";
+    }
+}
+
+function refazerMovimentos() {
+    if (historico.length === 0) {
+        mensagem.textContent = "Histórico vazio!";
+        return;
+    }
+
+    const movimentosSalvos = historico.slice();
+
+    reiniciarJogo();
+
+    for (const movimento of movimentosSalvos) {
+        moverDisco(movimento.origem, movimento.destino, false);
+    }
+
+    historico.push(...movimentosSalvos);
+
+    desenharTorres();
+    verificarVitoria();
+    mensagem.textContent = "Movimentos refeitos com sucesso!";
+}
+
+
+for (let i = 0; i < Torres.length; i++) {
+    Torres[i].addEventListener("click", function () {
+        clicarTorre(i);
     });
 }
+
+
+// BOTÕES 
+
+const botaoReiniciar = document.querySelector("#reiniciar");
+if (botaoReiniciar) {
+    botaoReiniciar.addEventListener("click", function() {
+        reiniciarJogo();
+        mensagem.textContent = "Jogo reiniciado!";
+    });
+}
+
+
+const botaoRefazer = document.querySelector("#refazer");
+if (botaoRefazer) {
+    botaoRefazer.addEventListener("click", function() {
+        refazerMovimentos();
+    });
+}
+
+
+// CHAMADAS INICIAIS
+
 
 desenharTorres();
 atualizarContador();
