@@ -5,7 +5,7 @@
 
 
 body {
-	min-height: 100vh;
+	min-height: 90vh;
 	display: flex;
 	flex-direction: column;
 	align-items: center;
@@ -13,6 +13,7 @@ body {
 	background: #132b3d;
 	font-family: Verdana;
 	color: #f4d03f;
+	
 }
 
 
@@ -72,6 +73,14 @@ button:hover , .button:hover {
 	color: white;
 }
 
+.flex-row {
+	display: flex;
+	flex-direction: row;
+	align-items: center;
+	justify-content: space-between;
+	gap: 16px;
+}
+
 .movimentacoes{
 	display: flex;
 	justify-content: space-between;
@@ -99,10 +108,22 @@ button:hover , .button:hover {
 	height: 60vh;
 }
 
+.torre-decoracao {
+	position: relative;
+	width: 180px;
+	height: 300px;
+}
+
 .torre {
     position: relative;
     width: 180px;
     height: 300px;
+}
+
+.torre.selecionada {
+	outline: 3px solid #f4d03f;
+	border-radius: 6px;
+	outline-offset: 6px;
 }
 
 .haste {
