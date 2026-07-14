@@ -2,20 +2,18 @@
 	box-sizing: border-box;
 }
 
-html, body {
-	width: 100%;
-	height: 100%;
-	margin: 0;
-}
+
 
 body {
 	min-height: 100vh;
 	display: flex;
+	flex-direction: column;
 	align-items: center;
 	justify-content: center;
 	background: #132b3d;
-	font-family: Verdana, sans-serif;
+	font-family: Verdana;
 }
+
 
 .menu {
 	display: flex;
@@ -24,17 +22,29 @@ body {
 	justify-content: center;
 	text-align: center;
 	padding: 24px;
-	transform: translateY(-40px);
+}
+
+.topo {
+    display: flex;
+    justify-content: flex-start;
+    width: 100%;
+    padding: 20px;
 }
 
 
 
 h1 {
-	margin: 0 0 24px;
 	color: #f4d03f;
 	font-size: 48px;
 	font-weight: 700;
-	line-height: 1.1;
+	
+}
+
+p {
+	color: #f4d03f;
+	font-size: 18px;
+	font-weight: 700;
+	
 }
 
 button, .button {
@@ -43,26 +53,31 @@ button, .button {
 	padding: 14px 28px;
 	background: #f4d03f;
 	color: #132b3d;
-	font-family: Verdana, sans-serif;
 	font-size: 18px;
 	font-weight: 700;
 	cursor: pointer;
 	
 }
 
-button:hover {
+button:hover , .button:hover {
 	background: #e0b12c;
 	color: white;
+}
+
+.movimentacoes{
+	display: flex;
+	justify-content: space-between;
+	padding: 100px;
+	width: 100%;
 }
 
 /* DEFINIÇÃO DAS TORRES E DOS DISCOS */
 .tabuleiro {
 	display: flex;
-	flex-direction: row;
 	justify-content: space-evenly;
 	align-items: center;
-	width: 100%;
-	
+	width: 90vw;
+	height: 70vh;
 }
 
 .torre {
@@ -93,4 +108,13 @@ button:hover {
 
     background-color: #a88132;
     border-radius: 6px;
+}
+
+.disco {
+	position: absolute;
+	left: 50%;
+	transform: translateX(-50%);
+	height: 24px;
+	border-radius: 6px;
+	z-index: 1;
 }
