@@ -108,7 +108,7 @@ function movimentoValido(indiceOrigem, indiceDestino) {
     return torreDestino.length === 0 || discoOrigem.tamanho < discoDestino.tamanho;
 }
 
-function executarMovimento(indiceOrigem, indiceDestino, registrarHistorico = true) {
+function executarMovimento(indiceOrigem, indiceDestino) {
     const torreOrigem = torres[indiceOrigem];
     const torreDestino = torres[indiceDestino];
 
@@ -116,18 +116,18 @@ function executarMovimento(indiceOrigem, indiceDestino, registrarHistorico = tru
     movimentos++;
     atualizarContador();
 
-    if (registrarHistorico) {
+   
         historico.push({ origem: indiceOrigem, destino: indiceDestino });
-    }
+
 }
 
-function moverDisco(indiceOrigem, indiceDestino, registrarHistorico = true) {
+function moverDisco(indiceOrigem, indiceDestino) {
     if (!movimentoValido(indiceOrigem, indiceDestino)) {
         mensagem.textContent = "Movimento inválido!";
         return false;
     }
 
-    executarMovimento(indiceOrigem, indiceDestino, registrarHistorico);
+    executarMovimento(indiceOrigem, indiceDestino);
     mensagem.textContent = "Movimento realizado!";
     return true;
 }
@@ -170,18 +170,35 @@ function refazerMovimentos() {
     }
 
     const movimentosSalvos = historico.slice();
+    let indiceMovimento = 0;
 
     reiniciarJogo();
-
-    for (const movimento of movimentosSalvos) {
-        moverDisco(movimento.origem, movimento.destino, false);
-    }
-
-    historico.push(...movimentosSalvos);
-
     desenharTorres();
-    verificarVitoria();
-    mensagem.textContent = "Movimentos refeitos com sucesso!";
+    mensagem.textContent = "Reproduzindo movimentos:";
+
+    const intervalo = setInterval(function () {
+
+        if (indiceMovimento < movimentosSalvos.length) {
+
+            const movimento = movimentosSalvos[indiceMovimento];
+
+            moverDisco(movimento.origem, movimento.destino);
+
+            desenharTorres();
+
+            indiceMovimento++;
+
+        } else {
+
+            clearInterval(intervalo);
+
+            verificarVitoria();
+
+            mensagem.textContent = "Movimentos refeitos com sucesso!";
+
+        }
+
+    }, 500);
 }
 
 
