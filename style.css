@@ -27,6 +27,8 @@ body {
 	transform: translateY(-40px);
 }
 
+
+
 h1 {
 	margin: 0 0 24px;
 	color: #f4d03f;
@@ -35,7 +37,7 @@ h1 {
 	line-height: 1.1;
 }
 
-button {
+button, .button {
 	border: 0;
 	border-radius: 10px;
 	padding: 14px 28px;
@@ -48,3 +50,47 @@ button {
 	
 }
 
+button:hover {
+	background: #e0b12c;
+	color: white;
+}
+
+/* DEFINIÇÃO DAS TORRES E DOS DISCOS */
+.tabuleiro {
+	display: flex;
+	flex-direction: row;
+	justify-content: space-evenly;
+	align-items: center;
+	width: 100%;
+	
+}
+
+.torre {
+    position: relative;
+    width: 180px;
+    height: 300px;
+}
+
+.haste {
+    position: absolute;
+    bottom: 15px;
+    left: 50%;
+    transform: translateX(-50%);
+
+    width: 10px;
+    height: 220px;
+
+    background-color: #a88132;
+    border-radius: 5px;
+}
+
+.base {
+    position: absolute;
+    bottom: 0;
+
+    width: 180px;
+    height: 20px;
+
+    background-color: #a88132;
+    border-radius: 6px;
+}
